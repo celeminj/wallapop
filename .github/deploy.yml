@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main # Desplegar cada vez que haya un push a la rama main
 
 jobs:
   build:
@@ -13,14 +13,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Build Docker image
-        run: docker build -t mi-web .
+      # (Opcional) Si tienes un proceso de construcción de tu sitio estático, aquí lo puedes añadir
+      # Ejemplo si usas npm:
+      - name: Build static site
+        run: |
+          npm install
+          npm run build
 
-      - name: Run container
-        run: docker run -d -p 8080:80 mi-web
+      # Copiar los archivos generados a la raíz del repositorio
+      - name: Copy files to root
+        run: |
+          cp -r ./build/* .  # Cambia ./build según el directorio donde se generen tus archivos estáticos
+          # Asegúrate de copiar los archivos generados a la raíz del repositorio
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "Deploy to GitHub Pages"
+          git push origin main  # Hacemos push a la rama main directamente
