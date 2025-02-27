@@ -13,8 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # (Opcional) Si tienes un proceso de construcción de tu sitio estático, aquí lo puedes añadir
-      # Ejemplo si usas npm:
       - name: Build static site
         run: |
           npm install

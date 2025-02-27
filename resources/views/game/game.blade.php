@@ -12,6 +12,7 @@
 
 <body>
     <div class="container mt-4">
+        <h1>LISTA</h1>
         <div class="row">
             @foreach ($games as $game)
                 <div class="col-md-4 mb-4">
