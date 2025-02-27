@@ -1,33 +1,25 @@
-name: Deploy to GitHub Pages
+name: Deploy to FTP server
 
 on:
   push:
     branches:
-      - main # Desplegar cada vez que haya un push a la rama main
+      - main # Desplegar cuando haya un push a la rama main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Build static site
-        run: |
-          npm install
-          npm run build
-
-      # Copiar los archivos generados a la raíz del repositorio
-      - name: Copy files to root
-        run: |
-          cp -r ./build/* .  # Cambia ./build según el directorio donde se generen tus archivos estáticos
-          # Asegúrate de copiar los archivos generados a la raíz del repositorio
-
-      - name: Commit and push changes
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add .
-          git commit -m "Deploy to GitHub Pages"
-          git push origin main  # Hacemos push a la rama main directamente
+      # Desplegar al servidor FTP usando el cliente FTP
+      - name: Deploy to FTP server
+        uses: SamKirkland/FTP-Deploy-Action@v4.1.0
+        with:
+          server: ${{ secrets.FTP_SERVIDOR }} # Usando el secreto FTP_SERVIDOR (server.ftpupload.net)
+          username: ${{ secrets.username.b12_37391677 }} # Usando el secreto username.b12_37391677
+          password: ${{ secrets.password.Jcg121299 }} # Usando el secreto password.asdasdas
+          local-dir: ./build # El directorio local que quieres subir (ajústalo según tu caso)
+          remote-dir: /public_html # El directorio remoto en tu servidor FTP
+          dry-run: false # Si quieres probar antes de hacer el despliegue, ponlo como true
